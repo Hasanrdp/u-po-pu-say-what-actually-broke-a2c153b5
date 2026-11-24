@@ -32,6 +32,12 @@ def main():
         raise SystemExit("entry must not be only white space")
     # No trailing newline: the file holds exactly the 139-character line.
     target.write_text(LINE, encoding="utf-8")
+    # Post-write read-back gate: the bytes on disk must be exactly LINE.
+    written = target.read_text(encoding="utf-8")
+    if written != LINE:
+        raise SystemExit("read-back mismatch: entry.txt does not equal the expected line")
+    if not 1 <= len(written) <= 200:
+        raise SystemExit("read-back failed: entry must be 1 to 200 characters")
     print(f"wrote {target} ({len(LINE)} chars)")
 
 
